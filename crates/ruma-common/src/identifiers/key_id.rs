@@ -12,6 +12,33 @@ use super::{
 };
 
 /// A key algorithm and key name delimited by a colon.
+///
+/// Examples of the use of this struct are [`CrossSigningKeyId`] and [`DeviceKeyId`], which provide
+/// [signing key identifiers](https://spec.matrix.org/v1.12/appendices/#signing-details) for
+/// WHAT??? and devices??? respectively.
+///
+/// This struct is rarely used directly - instead you should expect to use one of the typedefs
+/// that rely on it like [`CrossSigningKeyId`] or [`DeviceSigningKeyId`].
+///
+/// # Examples
+///
+/// To parse a colon-separated identifier:
+///
+/// ```rust
+/// use ruma_common::{DeviceId, DeviceKeyAlgorithm, KeyId, OwnedKeyId};
+/// let k: OwnedKeyId<DeviceKeyAlgorithm, DeviceId> = KeyId::parse("ed25519:1").unwrap();
+/// assert_eq!(k.algorithm().as_str(), "ed25519");
+/// assert_eq!(k.key_name(), "1");
+/// ```
+///
+/// To construct a colon-separated identifier from its parts:
+///
+/// ```rust
+/// use ruma_common::{DeviceId, DeviceKeyAlgorithm, KeyId, OwnedKeyId};
+/// let k: OwnedKeyId<DeviceKeyAlgorithm, DeviceId> =
+///     KeyId::from_parts(DeviceKeyAlgorithm::Curve25519, "MYDEVICE".into());
+/// assert_eq!(k.to_string(), "curve25519:MYDEVICE");
+/// ```
 #[repr(transparent)]
 #[derive(IdZst)]
 #[ruma_id(
